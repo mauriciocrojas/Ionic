@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Iniciar sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Accedé a tu cuenta</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
+        <ion-item>
+          <ion-label position="stacked">Correo</ion-label>
+          <ion-input
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            required
+            [(ngModel)]="email"
+            name="email"
+            placeholder="tucorreo@dominio.com">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="ion-margin-top">
+          <ion-label position="stacked">Clave</ion-label>
+          <ion-input
+            type="password"
+            autocomplete="current-password"
+            required
+            [(ngModel)]="password"
+            name="password"
+            placeholder="••••••••">
+          </ion-input>
+        </ion-item>
+
+        <ion-text color="danger" *ngIf="errorMsg" class="ion-margin-top" role="alert">
+          {{ errorMsg }}
+        </ion-text>
+
+        <ion-button
+          type="submit"
+          expand="block"
+          class="ion-margin-top"
+          [disabled]="loading || !f.valid">
+          <ion-spinner *ngIf="loading" name="lines-small" class="ion-margin-end"></ion-spinner>
+          Entrar
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

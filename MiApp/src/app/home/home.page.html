@@ -1,0 +1,11 @@
+<!-- home.page.html -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Bienvenido</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h2 *ngIf="email">Has iniciado sesión como: {{ email }}</h2>
+  <h2 *ngIf="!email">No se encontró sesión activa.</h2>
+</ion-content>
