@@ -1,4 +1,3 @@
-// tab1.page.ts
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,14 +13,24 @@ import { AuthService } from '../auth.service';
 export class Tab1LoginPage {
   email = '';
   password = '';
+  remember = true;
   loading = false;
   errorMsg = '';
+  showPwd = false;
 
   constructor(
     private auth: AuthService,
     private router: Router,
     private toastCtrl: ToastController
-  ) {}
+  ) {
+    // Prefill si el usuario eligió "Recordarme"
+    const saved = localStorage.getItem('login_email');
+    if (saved) this.email = saved;
+  }
+
+  togglePwd() {
+    this.showPwd = !this.showPwd;
+  }
 
   async onSubmit(form: NgForm) {
     if (this.loading || !form.valid) return;
@@ -30,7 +39,14 @@ export class Tab1LoginPage {
 
     try {
       await this.auth.signIn(this.email.trim(), this.password);
-      // 1) mensaje de OK
+
+      // Guardar email si corresponde
+      if (this.remember) {
+        localStorage.setItem('login_email', this.email.trim());
+      } else {
+        localStorage.removeItem('login_email');
+      }
+
       const t = await this.toastCtrl.create({
         message: '✅ Inicio de sesión correcto',
         duration: 1500,
@@ -38,7 +54,6 @@ export class Tab1LoginPage {
       });
       await t.present();
 
-      // 2) si querés, navegás (dejé replaceUrl para no volver al login con “atrás”)
       await this.router.navigateByUrl('/tabs', { replaceUrl: true });
     } catch (e: any) {
       this.errorMsg = e?.message ?? 'Error de autenticación';

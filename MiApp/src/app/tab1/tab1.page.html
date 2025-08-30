@@ -1,55 +1,113 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Iniciar sesión</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear" routerLink="/ayuda" aria-label="Ayuda">
+        <ion-icon name="help-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Accedé a tu cuenta</ion-card-title>
-    </ion-card-header>
+<ion-content [fullscreen]="true" class="login">
+  <div class="hero">
+    <h1 class="hero__title">Bienvenido</h1>
+    <p class="hero__subtitle">Accedé con tu correo y clave</p>
+  </div>
 
-    <ion-card-content>
-      <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
-        <ion-item>
-          <ion-label position="stacked">Correo</ion-label>
-          <ion-input
-            type="email"
-            inputmode="email"
-            autocomplete="email"
-            required
-            [(ngModel)]="email"
-            name="email"
-            placeholder="tucorreo@dominio.com">
-          </ion-input>
-        </ion-item>
+  <ion-grid fixed class="grid">
+    <ion-row>
+      <ion-col size="12" sizeMd="8" offsetMd="2">
+        <ion-card class="card">
+          <ion-card-header>
+            <ion-card-title>Accedé a tu cuenta</ion-card-title>
+            <ion-card-subtitle>Usá el correo registrado</ion-card-subtitle>
+          </ion-card-header>
 
-        <ion-item class="ion-margin-top">
-          <ion-label position="stacked">Clave</ion-label>
-          <ion-input
-            type="password"
-            autocomplete="current-password"
-            required
-            [(ngModel)]="password"
-            name="password"
-            placeholder="••••••••">
-          </ion-input>
-        </ion-item>
+          <ion-card-content>
+            <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
+              <!-- Correo -->
+              <ion-item class="field" [class.invalid]="emailCtrl.invalid && emailCtrl.touched">
+                <ion-label position="stacked">Correo</ion-label>
+                <ion-input
+                  type="email"
+                  inputmode="email"
+                  autocomplete="email"
+                  required
+                  [(ngModel)]="email"
+                  name="email"
+                  #emailCtrl="ngModel"
+                  placeholder="tucorreo@dominio.com">
+                </ion-input>
+              </ion-item>
+              <ion-note color="danger" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+                Ingresá un correo válido.
+              </ion-note>
 
-        <ion-text color="danger" *ngIf="errorMsg" class="ion-margin-top" role="alert">
-          {{ errorMsg }}
-        </ion-text>
+              <!-- Clave -->
+              <ion-item class="field ion-margin-top" [class.invalid]="passCtrl.invalid && passCtrl.touched">
+                <ion-label position="stacked">Clave</ion-label>
+                <ion-input
+                  [type]="showPwd ? 'text' : 'password'"
+                  autocomplete="current-password"
+                  required
+                  minlength="6"
+                  [(ngModel)]="password"
+                  name="password"
+                  #passCtrl="ngModel"
+                  placeholder="••••••••">
+                </ion-input>
+                <ion-button
+                  fill="clear"
+                  slot="end"
+                  type="button"
+                  (click)="togglePwd()"
+                  aria-label="{{ showPwd ? 'Ocultar clave' : 'Mostrar clave' }}">
+                  <ion-icon [name]="showPwd ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+                </ion-button>
+              </ion-item>
+              <ion-note color="danger" *ngIf="passCtrl.invalid && passCtrl.touched">
+                La clave debe tener al menos 6 caracteres.
+              </ion-note>
 
-        <ion-button
-          type="submit"
-          expand="block"
-          class="ion-margin-top"
-          [disabled]="loading || !f.valid">
-          <ion-spinner *ngIf="loading" name="lines-small" class="ion-margin-end"></ion-spinner>
-          Entrar
-        </ion-button>
-      </form>
-    </ion-card-content>
-  </ion-card>
+              <!-- Recordarme / Olvidé mi clave -->
+              <div class="row meta">
+                <ion-checkbox [(ngModel)]="remember" name="remember" justify="start">
+                  Recordarme
+                </ion-checkbox>
+
+                <ion-button fill="clear" size="small" routerLink="/recuperar" class="link">
+                  ¿Olvidaste tu clave?
+                </ion-button>
+              </div>
+
+              <!-- Error general -->
+              <ion-text color="danger" *ngIf="errorMsg" class="error" role="alert">
+                {{ errorMsg }}
+              </ion-text>
+
+              <!-- Botón enviar -->
+              <ion-button
+                class="submit"
+                type="submit"
+                expand="block"
+                [disabled]="loading || !f.valid">
+                <ion-spinner *ngIf="loading" name="lines-small" class="ion-margin-end"></ion-spinner>
+                Entrar
+              </ion-button>
+
+              <!-- CTA registro opcional -->
+              <div class="signup">
+                <span>¿No tenés cuenta?</span>
+                <ion-button fill="clear" size="small" routerLink="/registro">Crear cuenta</ion-button>
+              </div>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="bottom-spacer" aria-hidden="true"></div>
 </ion-content>

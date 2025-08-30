@@ -1,4 +1,3 @@
-// home.page.ts
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 
@@ -10,10 +9,25 @@ import { AuthService } from '../auth.service';
 })
 export class HomePage implements OnInit {
   email: string | null = null;
+  isLoading = true;
 
   constructor(private auth: AuthService) {}
 
   async ngOnInit() {
-    this.email = await this.auth.getUserEmail();
+    try {
+      this.email = await this.auth.getUserEmail();
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async refresh(ev: CustomEvent) {
+    try {
+      this.isLoading = true;
+      this.email = await this.auth.getUserEmail();
+    } finally {
+      (ev.detail as any).complete();
+      this.isLoading = false;
+    }
   }
 }

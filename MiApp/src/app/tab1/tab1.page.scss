@@ -1,0 +1,109 @@
+:host {
+  --hero-start: var(--ion-color-primary);
+  --hero-end: color-mix(in oklab, var(--ion-color-primary), transparent 70%);
+  --glass-bg: rgba(255, 255, 255, .65);
+  --glass-border: rgba(0, 0, 0, .06);
+  --soft-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --glass-bg: rgba(20, 20, 24, .55);
+    --glass-border: rgba(255, 255, 255, .08);
+    --hero-end: color-mix(in oklab, var(--ion-color-primary), transparent 80%);
+  }
+}
+
+.login {
+  --padding-top: max(12px, env(safe-area-inset-top));
+  --padding-bottom: max(20px, env(safe-area-inset-bottom));
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+
+  .hero {
+    margin: -8px -16px 16px;
+    padding: clamp(16px, 5vw, 28px);
+    background: linear-gradient(135deg, var(--hero-start), var(--hero-end));
+    color: var(--ion-color-primary-contrast);
+    border-radius: 0 0 24px 24px;
+    text-align: left;
+
+    &__title {
+      margin: 0 0 4px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-size: clamp(22px, 5.5vw, 32px);
+    }
+    &__subtitle {
+      margin: 0;
+      opacity: .9;
+      font-size: clamp(14px, 3.8vw, 16px);
+    }
+  }
+
+  .grid {
+    padding-inline: clamp(12px, 4vw, 20px);
+  }
+
+  .card {
+    backdrop-filter: saturate(120%) blur(8px);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    box-shadow: var(--soft-shadow);
+    overflow: hidden;
+
+    ion-card-title { font-size: clamp(18px, 4.5vw, 22px); font-weight: 700; }
+    ion-card-subtitle { opacity: .75; font-size: clamp(12px, 3.5vw, 14px); }
+  }
+
+  .field {
+    border-radius: 12px;
+    --inner-padding-top: 12px;
+    --inner-padding-bottom: 12px;
+    --padding-start: 12px;
+    --highlight-color-focused: var(--ion-color-primary);
+    transition: box-shadow .2s ease;
+
+    &.invalid {
+      --highlight-color-focused: var(--ion-color-danger);
+      box-shadow: 0 0 0 2px color-mix(in oklab, var(--ion-color-danger), transparent 70%);
+    }
+  }
+
+  ion-note { margin-top: 6px; margin-left: 4px; font-size: 12px; }
+
+  .meta {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    ion-checkbox {
+      --size: 18px;
+      --checkbox-background-checked: var(--ion-color-primary);
+    }
+
+    .link { --padding-start: 6px; --padding-end: 6px; font-size: 13px; }
+  }
+
+  .error { display: block; margin-top: 10px; }
+
+  .submit {
+    margin-top: 14px;
+    --border-radius: 999px;
+    min-height: 44px; // target táctil
+  }
+
+  .signup {
+    margin-top: 10px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+
+    span { opacity: .75; font-size: 13px; }
+  }
+
+  .bottom-spacer { height: env(safe-area-inset-bottom); }
+}
