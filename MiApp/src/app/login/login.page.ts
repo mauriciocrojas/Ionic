@@ -32,6 +32,14 @@ export class LoginPage {
     this.showPwd = !this.showPwd;
   }
 
+  /** Rellena el formulario con credenciales de demo */
+  prefill(form: NgForm) {
+    this.email = 'mauguitar17@gmail.com';
+    this.password = '123456';
+    // Asegura que el formulario se marque como válido inmediatamente
+    setTimeout(() => form.control.updateValueAndValidity(), 0);
+  }
+
   async onSubmit(form: NgForm) {
     if (this.loading || !form.valid) return;
     this.errorMsg = '';

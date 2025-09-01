@@ -8,12 +8,7 @@ const routes: Routes = [
     path: '',
     component: TabsPage,
     children: [
-      {
-        path: 'tab3',
-        loadChildren: () =>
-          import('../tab3/tab3.module').then(m => m.Tab3PageModule),
-      },
-      { path: '', redirectTo: 'tab2', pathMatch: 'full' }, // tab por defecto
+          { path: '', redirectTo: 'tab2', pathMatch: 'full' }, // tab por defecto
     ],
   },
 ];

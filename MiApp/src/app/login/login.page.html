@@ -26,6 +26,18 @@
           </ion-card-header>
 
           <ion-card-content>
+            <!-- Botón para precargar datos de prueba -->
+            <ion-button
+              type="button"
+              fill="outline"
+              size="small"
+              class="ion-margin-bottom"
+              (click)="prefill(f)"
+              aria-label="Rellenar datos de prueba">
+              <ion-icon slot="start" name="flash-outline"></ion-icon>
+              Precargar datos
+            </ion-button>
+
             <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
               <!-- Correo -->
               <ion-item class="field" [class.invalid]="emailCtrl.invalid && emailCtrl.touched">
