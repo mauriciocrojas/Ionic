@@ -9,19 +9,17 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'home',
-        loadChildren: () => import('../home/home.module').then(m => m.HomePageModule)
-      },
-      {
         path: 'tab3',
-        loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+        loadChildren: () =>
+          import('../tab3/tab3.module').then(m => m.Tab3PageModule),
       },
-      { path: '', redirectTo: 'home', pathMatch: 'full' } // default dentro de /tabs
-    ]
-  }
+      { path: '', redirectTo: 'tab2', pathMatch: 'full' }, // tab por defecto
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
 export class TabsPageRoutingModule {}

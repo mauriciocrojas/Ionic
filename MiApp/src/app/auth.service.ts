@@ -5,34 +5,41 @@ import { supabase } from './supabase.client';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  async getSession() {
+  async getSession(): Promise<import('@supabase/supabase-js').Session | null> {
     const { data, error } = await supabase.auth.getSession();
     if (error) throw error;
     return data.session ?? null;
   }
 
   onAuthStateChange(cb: (signedIn: boolean) => void) {
+    // Devuelve el subscription para poder usar .unsubscribe()
     return supabase.auth.onAuthStateChange((_ev, session) => cb(!!session));
   }
 
-  async signIn(email: string, password: string) {
+  async signIn(email: string, password: string): Promise<import('@supabase/supabase-js').User | null> {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw this.mapError(error);
-    return data.user;
+    return data.user ?? null;
   }
 
-  async signUp(email: string, password: string) {
+  async signUp(email: string, password: string): Promise<import('@supabase/supabase-js').User | null> {
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) throw this.mapError(error);
-    return data.user;
+    return data.user ?? null;
   }
 
-  async signOut() {
+  async signOut(): Promise<void> {
     const { error } = await supabase.auth.signOut();
     if (error) throw this.mapError(error);
   }
 
-  private mapError(err: { message?: string; status?: number; code?: string }) {
+  async getUserEmail(): Promise<string | null> {
+    const { data, error } = await supabase.auth.getUser();
+    if (error) return null;
+    return data.user?.email ?? null;
+  }
+
+  private mapError(err: { message?: string; status?: number; code?: string }): Error {
     // Mensajes típicos de Supabase/email+password
     const msg = (err.code || err.message || '').toLowerCase();
     if (msg.includes('invalid login') || msg.includes('invalid_credentials')) {
@@ -46,12 +53,4 @@ export class AuthService {
     }
     return new Error(err.message || 'Error de autenticación');
   }
-
-  // auth.service.ts
-async getUserEmail(): Promise<string | null> {
-  const { data, error } = await supabase.auth.getUser();
-  if (error) return null;
-  return data.user?.email ?? null;
-}
-
 }

@@ -6,11 +6,11 @@ import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './tab1.page.html',
-  styleUrls: ['./tab1.page.scss'],
+  templateUrl: './login.page.html',
+  styleUrls: ['./login.page.scss'],
   standalone: false
 })
-export class Tab1LoginPage {
+export class LoginPage {
   email = '';
   password = '';
   remember = true;
@@ -54,7 +54,7 @@ export class Tab1LoginPage {
       });
       await t.present();
 
-      await this.router.navigateByUrl('/tabs', { replaceUrl: true });
+      await this.router.navigateByUrl('/home', { replaceUrl: true });
     } catch (e: any) {
       this.errorMsg = e?.message ?? 'Error de autenticación';
       const t = await this.toastCtrl.create({
