@@ -4,6 +4,19 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AuthService } from '../auth.service';
 
+type PresetKey = 'mau' | 'mcc' | 'nico';
+
+interface Preset {
+  key: PresetKey;
+  label: string;     // cómo se muestra
+  email: string;
+  password: string;
+  initials: string;  // fallback si no hay avatar
+  avatar?: string | null;
+  short: string;     // email acortado para UI
+  shape: 'shape-hex' | 'shape-kite' | 'shape-squircle';
+}
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -18,12 +31,45 @@ export class LoginPage {
   errorMsg = '';
   showPwd = false;
 
+  // ⚠️ Cambiá las passwords de demo si hace falta
+  presets: Preset[] = [
+    {
+      key: 'mau',
+      label: 'Mau Rojas',
+      email: 'mauguitar17@gmail.com',
+      password: '123456',
+      initials: 'MR',
+      avatar: null, // ej: 'assets/avatars/mau.png'
+      short: this.shortenEmail('mauguitar17@gmail.com'),
+      shape: 'shape-hex',
+    },
+    {
+      key: 'mcc',
+      label: 'Mauricio CC',
+      email: 'mauriciocc.rojas@gmail.com',
+      password: '123456',
+      initials: 'MC',
+      avatar: null, // ej: 'assets/avatars/mcc.png'
+      short: this.shortenEmail('mauriciocc.rojas@gmail.com'),
+      shape: 'shape-kite',
+    },
+    {
+      key: 'nico',
+      label: 'Nico Migliarino',
+      email: 'nmigliarino@gmail.com',
+      password: '123456',
+      initials: 'NM',
+      avatar: null, // ej: 'assets/avatars/nico.png'
+      short: this.shortenEmail('nmigliarino@gmail.com'),
+      shape: 'shape-squircle',
+    },
+  ];
+
   constructor(
     private auth: AuthService,
     private router: Router,
     private toastCtrl: ToastController
   ) {
-    // Prefill si el usuario eligió "Recordarme"
     const saved = localStorage.getItem('login_email');
     if (saved) this.email = saved;
   }
@@ -32,12 +78,28 @@ export class LoginPage {
     this.showPwd = !this.showPwd;
   }
 
-  /** Rellena el formulario con credenciales de demo */
-  prefill(form: NgForm) {
-    this.email = 'mauguitar17@gmail.com';
-    this.password = '123456';
-    // Asegura que el formulario se marque como válido inmediatamente
-    setTimeout(() => form.control.updateValueAndValidity(), 0);
+  /** Tocar un preset: precarga credenciales y envía el login automáticamente */
+  quickFill(key: PresetKey, form: NgForm, autoSubmit: boolean = true) {
+    if (this.loading) return;
+    const p = this.presets.find(x => x.key === key);
+    if (!p) return;
+
+    this.email = p.email;
+    this.password = p.password;
+
+    // Marca el form como válido y dispara submit si se desea
+    setTimeout(() => {
+      form.control.updateValueAndValidity();
+      if (autoSubmit) {
+        this.onSubmit(form);
+      }
+    }, 0);
+  }
+
+  /** Acorta el email para la UI (usuario@dominio → usuario@…) */
+  private shortenEmail(email: string): string {
+    const [user, domain] = email.split('@');
+    return domain ? `${user}@…` : email;
   }
 
   async onSubmit(form: NgForm) {
@@ -48,7 +110,6 @@ export class LoginPage {
     try {
       await this.auth.signIn(this.email.trim(), this.password);
 
-      // Guardar email si corresponde
       if (this.remember) {
         localStorage.setItem('login_email', this.email.trim());
       } else {

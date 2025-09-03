@@ -1,3 +1,4 @@
+/* === TU ESTILO (pegado tal cual) === */
 :host {
   --hero-start: var(--ion-color-primary);
   --hero-end: color-mix(in oklab, var(--ion-color-primary), transparent 70%);
@@ -106,4 +107,95 @@
   }
 
   .bottom-spacer { height: env(safe-area-inset-bottom); }
+}
+
+/* === EXTRAS PARA ACCESOS RÁPIDOS === */
+
+/* contenedor flotante (columna) */
+.quick-users {
+  position: fixed;
+  right: clamp(10px, 4vw, 18px);
+  bottom: calc(env(safe-area-inset-bottom) + 18px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 99;
+}
+
+/* botón custom (no rectangular), con “glass” */
+.preset-btn {
+  --btn-bg: var(--glass-bg);
+  --btn-border: var(--glass-border);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  min-width: 196px;
+
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  box-shadow: var(--soft-shadow);
+  color: var(--ion-text-color);
+  backdrop-filter: saturate(120%) blur(6px);
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, background .2s ease;
+  overflow: hidden;
+
+  /* tipografía */
+  .meta {
+    display: grid;
+    line-height: 1.1;
+    small { font-weight: 700; font-size: 13px; }
+    .email { opacity: .75; font-size: 12px; }
+  }
+
+  /* avatar (no redondo) */
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 12px; /* squircle */
+    display: grid; place-items: center;
+    background: linear-gradient(135deg,
+      color-mix(in oklab, var(--ion-color-primary), white 10%),
+      color-mix(in oklab, var(--ion-color-primary), black 12%));
+    border: 1px solid color-mix(in oklab, var(--ion-color-primary), transparent 70%);
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,.12);
+
+    img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .avatar-initials {
+      color: var(--ion-color-primary-contrast);
+      font-weight: 800; font-size: 14px; letter-spacing: .02em;
+      text-shadow: 0 1px 0 rgba(0,0,0,.2);
+    }
+  }
+  .avatar.with-img { background: #0000; border-color: rgba(0,0,0,.06); }
+
+  /* estados */
+  &:hover { transform: translateY(-1px) scale(1.01); }
+  &:active { transform: translateY(0) scale(.98); }
+}
+
+/* formas NO redondas, NO rectangulares */
+.shape-hex {
+  clip-path: polygon(10% 0, 90% 0, 100% 28%, 100% 72%, 90% 100%, 10% 100%, 0 72%, 0 28%);
+}
+.shape-kite {
+  clip-path: polygon(8% 0, 92% 0, 100% 38%, 78% 100%, 22% 100%, 0 38%);
+}
+.shape-squircle {
+  /* aproximación visual a squircle */
+  border-radius: 24px;
+  /* y leve sesgo para que no sea un “rectángulo común” */
+  transform: skewX(-2deg);
+}
+
+/* mejor ubicación en pantallas chicas */
+@media (max-width: 400px) {
+  .preset-btn { min-width: 180px; padding: 10px 12px; }
+}
+@media (max-width: 360px) {
+  .quick-users { right: 10px; gap: 10px; }
+  .preset-btn { min-width: 168px; }
 }

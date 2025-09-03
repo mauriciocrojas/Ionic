@@ -26,18 +26,6 @@
           </ion-card-header>
 
           <ion-card-content>
-            <!-- Botón para precargar datos de prueba -->
-            <ion-button
-              type="button"
-              fill="outline"
-              size="small"
-              class="ion-margin-bottom"
-              (click)="prefill(f)"
-              aria-label="Rellenar datos de prueba">
-              <ion-icon slot="start" name="flash-outline"></ion-icon>
-              Precargar datos
-            </ion-button>
-
             <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
               <!-- Correo -->
               <ion-item class="field" [class.invalid]="emailCtrl.invalid && emailCtrl.touched">
@@ -120,6 +108,26 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <!-- ACCESOS RÁPIDOS flotantes (no rectangulares, con forma y ripple) -->
+  <div class="quick-users" role="group" aria-label="Accesos rápidos">
+    <ng-container *ngFor="let u of presets">
+      <button type="button"
+              class="preset-btn ion-activatable {{u.shape}}"
+              (click)="quickFill(u.key, f,false)"
+              [attr.aria-label]="'Ingresar como ' + u.label">
+        <div class="avatar" [class.with-img]="!!u.avatar">
+          <img *ngIf="u.avatar" [src]="u.avatar" [alt]="u.label" />
+          <span *ngIf="!u.avatar" class="avatar-initials">{{ u.initials }}</span>
+        </div>
+        <div class="meta">
+          <small>{{ u.label }}</small>
+          <span class="email">{{ u.short }}</span>
+        </div>
+        <ion-ripple-effect></ion-ripple-effect>
+      </button>
+    </ng-container>
+  </div>
 
   <div class="bottom-spacer" aria-hidden="true"></div>
 </ion-content>
