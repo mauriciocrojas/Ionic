@@ -10,7 +10,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="login">
+<ion-content [fullscreen]="true" class="login safe-top">
   <div class="hero">
     <h1 class="hero__title">Bienvenido</h1>
     <p class="hero__subtitle">Accedé con tu correo y clave</p>
@@ -105,29 +105,28 @@
             </form>
           </ion-card-content>
         </ion-card>
+
+        <!-- ACCESOS RÁPIDOS (no flotantes) -->
+        <div class="quick-users inline" role="group" aria-label="Accesos rápidos">
+          <ng-container *ngFor="let u of presets">
+            <button type="button"
+                    class="preset-btn"
+                    (click)="quickFill(u.key, f,false)"
+                    [attr.aria-label]="'Ingresar como ' + u.label">
+              <div class="avatar" [class.with-img]="!!u.avatar">
+                <img *ngIf="u.avatar" [src]="u.avatar" [alt]="u.label" />
+                <span *ngIf="!u.avatar" class="avatar-initials">{{ u.initials }}</span>
+              </div>
+              <div class="meta">
+                <small>{{ u.label }}</small>
+                <span class="email">{{ u.short }}</span>
+              </div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </button>
+          </ng-container>
+        </div>
+
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <!-- ACCESOS RÁPIDOS flotantes (no rectangulares, con forma y ripple) -->
-  <div class="quick-users" role="group" aria-label="Accesos rápidos">
-    <ng-container *ngFor="let u of presets">
-      <button type="button"
-              class="preset-btn ion-activatable {{u.shape}}"
-              (click)="quickFill(u.key, f,false)"
-              [attr.aria-label]="'Ingresar como ' + u.label">
-        <div class="avatar" [class.with-img]="!!u.avatar">
-          <img *ngIf="u.avatar" [src]="u.avatar" [alt]="u.label" />
-          <span *ngIf="!u.avatar" class="avatar-initials">{{ u.initials }}</span>
-        </div>
-        <div class="meta">
-          <small>{{ u.label }}</small>
-          <span class="email">{{ u.short }}</span>
-        </div>
-        <ion-ripple-effect></ion-ripple-effect>
-      </button>
-    </ng-container>
-  </div>
-
-  <div class="bottom-spacer" aria-hidden="true"></div>
 </ion-content>

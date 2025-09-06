@@ -22,6 +22,7 @@ export class RegistroPage {
 
   passwordsMatch = false;
   confirmTouched = false;
+  emailTaken = false; // bandera “correo ya registrado”
 
   constructor(
     private auth: AuthService,
@@ -34,7 +35,6 @@ export class RegistroPage {
 
   copyPwdToConfirm() {
     this.password2 = this.password;
-    // marcamos como “tocado” para que, si hay error, se muestre; y recalculamos match
     this.confirmTouched = true;
     this.checkMatch();
   }
@@ -46,17 +46,20 @@ export class RegistroPage {
   async onSubmit(form: NgForm) {
     if (this.loading || !form.valid || !this.passwordsMatch) return;
     this.errorMsg = '';
+    this.emailTaken = false;
     this.loading = true;
+
+    const normalizedEmail = this.email.trim().toLowerCase();
 
     try {
       // 1) Crear usuario en Supabase
-      const user = await this.auth.signUp(this.email.trim(), this.password);
+      const user = await this.auth.signUp(normalizedEmail, this.password);
 
-      // 2) (Opcional) Crear perfil en tu tabla "profiles"
+      // 2) (Opcional) Crear/actualizar perfil en tu tabla "profiles"
       if (user?.id) {
         await supabase.from('profiles').upsert({
           id: user.id,
-          email: this.email.trim(),
+          email: normalizedEmail,
           created_at: new Date().toISOString()
         });
       }
@@ -72,14 +75,27 @@ export class RegistroPage {
       await this.router.navigateByUrl('/login', { replaceUrl: true });
 
     } catch (e: any) {
-      this.errorMsg = e?.message ?? 'Error al crear la cuenta';
-      const t = await this.toastCtrl.create({
-        message: `❌ ${this.errorMsg}`,
-        duration: 2500,
-        position: 'top',
-        color: 'danger'
-      });
-      await t.present();
+      // Manejamos casos conocidos
+      if (e?.code === 'email_exists') {
+        this.emailTaken = true;
+        this.errorMsg = '';
+        const t = await this.toastCtrl.create({
+          message: '⚠️ Ese correo ya está registrado. Probá iniciar sesión o recuperar tu clave.',
+          duration: 2600,
+          position: 'top',
+          color: 'warning'
+        });
+        await t.present();
+      } else {
+        this.errorMsg = e?.message ?? 'Error al crear la cuenta';
+        const t = await this.toastCtrl.create({
+          message: `❌ ${this.errorMsg}`,
+          duration: 2600,
+          position: 'top',
+          color: 'danger'
+        });
+        await t.present();
+      }
     } finally {
       this.loading = false;
     }

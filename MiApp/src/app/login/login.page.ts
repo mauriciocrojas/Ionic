@@ -35,30 +35,30 @@ export class LoginPage {
   presets: Preset[] = [
     {
       key: 'mau',
-      label: 'Mau Rojas',
+      label: 'Usuario 1',
       email: 'mauguitar17@gmail.com',
       password: '123456',
-      initials: 'MR',
+      initials: '1',
       avatar: null, // ej: 'assets/avatars/mau.png'
       short: this.shortenEmail('mauguitar17@gmail.com'),
       shape: 'shape-hex',
     },
     {
       key: 'mcc',
-      label: 'Mauricio CC',
+      label: 'Usuario 2',
       email: 'mauriciocc.rojas@gmail.com',
       password: '123456',
-      initials: 'MC',
+      initials: '2',
       avatar: null, // ej: 'assets/avatars/mcc.png'
       short: this.shortenEmail('mauriciocc.rojas@gmail.com'),
       shape: 'shape-kite',
     },
     {
       key: 'nico',
-      label: 'Nico Migliarino',
+      label: 'Usuario 3',
       email: 'nmigliarino@gmail.com',
       password: '123456',
-      initials: 'NM',
+      initials: '3',
       avatar: null, // ej: 'assets/avatars/nico.png'
       short: this.shortenEmail('nmigliarino@gmail.com'),
       shape: 'shape-squircle',
